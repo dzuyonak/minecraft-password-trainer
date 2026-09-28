@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dzuyonak/minecraft-password-trainer/actions/workflows/build.yml">
-    <img src="https://github.com/dzuyonak/minecraft-password-trainer/actions/workflows/build.yml/badge.svg" alt="CI Build Status" />
+  <a href="https://github.com/dzuyonak/password-trainer-minecraft/actions/workflows/build.yml">
+    <img src="https://github.com/dzuyonak/password-trainer-minecraft/actions/workflows/build.yml/badge.svg" alt="CI Build Status" />
   </a>
   <img src="https://img.shields.io/badge/Platform-Windows%207%2B%20%7C%20Web%20%7C%20macOS-2ea44f?style=flat&logo=windows" alt="Platform" />
   <img src="https://img.shields.io/badge/Languages-RU%20%7C%20EN%20%7C%20PL-brightgreen?style=flat" alt="Languages" />
@@ -63,8 +63,8 @@
 
 | Платформа | Ссылка | Описание | Системные требования |
 | :--- | :--- | :--- | :--- |
-| **Windows** | 📥 [**Скачать MinecraftPasswordTrainer.exe**](https://github.com/dzuyonak/minecraft-password-trainer/raw/main/MinecraftPasswordTrainer.exe) | Автономный исполняемый файл (~1 МБ). Установка не требуется, запуск двойным кликом. | Windows 7, 8, 10, 11 (64-bit) |
-| **Онлайн (Web)** | 🌐 [**Открыть в браузере (GitHub Pages)**](https://dzuyonak.github.io/minecraft-password-trainer/) | Доступен с любого устройства: телефона, планшета, iPad или ПК без установки. | Любой современный браузер |
+| **Windows** | 📥 [**Скачать MinecraftPasswordTrainer.exe**](https://github.com/dzuyonak/password-trainer-minecraft/raw/main/MinecraftPasswordTrainer.exe) | Автономный исполняемый файл (~1 МБ). Установка не требуется, запуск двойным кликом. | Windows 7, 8, 10, 11 (64-bit) |
+| **Онлайн (Web)** | 🌐 [**Открыть в браузере (GitHub Pages)**](https://dzuyonak.github.io/password-trainer-minecraft/) | Доступен с любого устройства: телефона, планшета, iPad или ПК без установки. | Любой современный браузер |
 | **macOS / Linux** | `open index.html` или `python3 app.py` | Локальный запуск веб-версии либо сервер на Python с живой синхронизацией `config.ini`. | Python 3.8+ (опционально) |
 
 ---
@@ -176,7 +176,7 @@ show_hint = 1
 1. При появлении синего экрана *«Система Windows защитила ваш компьютер»* (SmartScreen):
 2. Нажмите текстовую ссылку **«Подробнее»** (*More info*).
 3. Нажмите появившуюся кнопку **«Выполнить в любом случае»** (*Run anyway*).
-4. *(Альтернатива)* Вы можете играть прямо в браузере через [GitHub Pages](https://dzuyonak.github.io/minecraft-password-trainer/) либо скомпилировать исполняемый файл самостоятельно из исходного кода (`./build.sh`).
+4. *(Альтернатива)* Вы можете играть прямо в браузере через [GitHub Pages](https://dzuyonak.github.io/password-trainer-minecraft/) либо скомпилировать исполняемый файл самостоятельно из исходного кода (`./build.sh`).
 
 ---
 
@@ -294,7 +294,7 @@ zig c++ -target x86_64-windows-gnu \
    - В настройках репозитория откройте **Settings** ➔ **Pages**.
    - В выпадающем меню **Branch** выберите ветку `main` и папку `/(root)`.
    - Нажмите **Save**.
-   - Тренажёр станет доступен онлайн по ссылке: `https://dzuyonak.github.io/minecraft-password-trainer/`.
+   - Тренажёр станет доступен онлайн по ссылке: `https://dzuyonak.github.io/password-trainer-minecraft/`.
 
 ---
 

@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dzuyonak/minecraft-password-trainer/actions/workflows/build.yml">
-    <img src="https://github.com/dzuyonak/minecraft-password-trainer/actions/workflows/build.yml/badge.svg" alt="CI Build Status" />
+  <a href="https://github.com/dzuyonak/password-trainer-minecraft/actions/workflows/build.yml">
+    <img src="https://github.com/dzuyonak/password-trainer-minecraft/actions/workflows/build.yml/badge.svg" alt="CI Build Status" />
   </a>
   <img src="https://img.shields.io/badge/Platform-Windows%207%2B%20%7C%20Web%20%7C%20macOS-2ea44f?style=flat&logo=windows" alt="Platform" />
   <img src="https://img.shields.io/badge/Languages-EN%20%7C%20RU%20%7C%20PL-brightgreen?style=flat" alt="Languages" />
@@ -63,8 +63,8 @@ Many children struggle when logging into their Minecraft accounts: they forget u
 
 | Platform | Link | Description | Requirements |
 | :--- | :--- | :--- | :--- |
-| **Windows** | 📥 [**Download MinecraftPasswordTrainer.exe**](https://github.com/dzuyonak/minecraft-password-trainer/raw/main/MinecraftPasswordTrainer.exe) | Standalone executable (~1 MB). Zero setup, double-click to run! | Windows 7, 8, 10, 11 (64-bit) |
-| **Online (Web)** | 🌐 [**Open in Browser (GitHub Pages)**](https://dzuyonak.github.io/minecraft-password-trainer/?lang=en) | Play instantly from any smartphone, tablet, iPad, or PC without downloading. | Modern web browser |
+| **Windows** | 📥 [**Download MinecraftPasswordTrainer.exe**](https://github.com/dzuyonak/password-trainer-minecraft/raw/main/MinecraftPasswordTrainer.exe) | Standalone executable (~1 MB). Zero setup, double-click to run! | Windows 7, 8, 10, 11 (64-bit) |
+| **Online (Web)** | 🌐 [**Open in Browser (GitHub Pages)**](https://dzuyonak.github.io/password-trainer-minecraft/?lang=en) | Play instantly from any smartphone, tablet, iPad, or PC without downloading. | Modern web browser |
 | **macOS / Linux** | `open index.html` or `python3 app.py` | Local web runner or lightweight Python server with live `config.ini` sync. | Python 3.8+ (optional) |
 
 ---
@@ -176,7 +176,7 @@ Because the binary is built with the Zig compiler and contains interactive login
 1. When the blue window appears stating *"Windows protected your PC"* (SmartScreen):
 2. Click **"More info"**.
 3. Click **"Run anyway"**.
-4. *(Alternatively)* You can practice directly in your browser via [GitHub Pages](https://dzuyonak.github.io/minecraft-password-trainer/) or build the binary directly from source code (`./build.sh`).
+4. *(Alternatively)* You can practice directly in your browser via [GitHub Pages](https://dzuyonak.github.io/password-trainer-minecraft/) or build the binary directly from source code (`./build.sh`).
 
 ---
 
@@ -294,7 +294,7 @@ zig c++ -target x86_64-windows-gnu \
    - In your repository, go to **Settings** ➔ **Pages**.
    - Under **Branch**, select `main` and folder `/(root)`.
    - Click **Save**.
-   - Accessible worldwide at: `https://dzuyonak.github.io/minecraft-password-trainer/`.
+   - Accessible worldwide at: `https://dzuyonak.github.io/password-trainer-minecraft/`.
 
 ---
 

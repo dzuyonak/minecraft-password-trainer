@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dzuyonak/minecraft-password-trainer/actions/workflows/build.yml">
-    <img src="https://github.com/dzuyonak/minecraft-password-trainer/actions/workflows/build.yml/badge.svg" alt="Status kompilacji CI" />
+  <a href="https://github.com/dzuyonak/password-trainer-minecraft/actions/workflows/build.yml">
+    <img src="https://github.com/dzuyonak/password-trainer-minecraft/actions/workflows/build.yml/badge.svg" alt="Status kompilacji CI" />
   </a>
   <img src="https://img.shields.io/badge/Platforma-Windows%207%2B%20%7C%20Web%20%7C%20macOS-2ea44f?style=flat&logo=windows" alt="Platforma" />
   <img src="https://img.shields.io/badge/Języki-PL%20%7C%20EN%20%7C%20RU-brightgreen?style=flat" alt="Języki" />
@@ -63,8 +63,8 @@ Wiele dzieci napotyka trudności podczas logowania się do swojego konta Minecra
 
 | Platforma | Link | Opis | Wymagania systemowe |
 | :--- | :--- | :--- | :--- |
-| **Windows** | 📥 [**Pobierz MinecraftPasswordTrainer.exe**](https://github.com/dzuyonak/minecraft-password-trainer/raw/main/MinecraftPasswordTrainer.exe) | Samodzielny plik wykonywalny (~1 MB). Nie wymaga instalacji, uruchomienie dwuklikiem. | Windows 7, 8, 10, 11 (64-bit) |
-| **Online (Web)** | 🌐 [**Otwórz w przeglądarce (GitHub Pages)**](https://dzuyonak.github.io/minecraft-password-trainer/?lang=pl) | Dostępne na każdym telefonie, tablecie, iPadzie lub komputerze bez pobierania. | Dowolna nowoczesna przeglądarka |
+| **Windows** | 📥 [**Pobierz MinecraftPasswordTrainer.exe**](https://github.com/dzuyonak/password-trainer-minecraft/raw/main/MinecraftPasswordTrainer.exe) | Samodzielny plik wykonywalny (~1 MB). Nie wymaga instalacji, uruchomienie dwuklikiem. | Windows 7, 8, 10, 11 (64-bit) |
+| **Online (Web)** | 🌐 [**Otwórz w przeglądarce (GitHub Pages)**](https://dzuyonak.github.io/password-trainer-minecraft/?lang=pl) | Dostępne na każdym telefonie, tablecie, iPadzie lub komputerze bez pobierania. | Dowolna nowoczesna przeglądarka |
 | **macOS / Linux** | `open index.html` lub `python3 app.py` | Wersja przeglądarkowa lub serwer Python z automatyczną synchronizacją `config.ini`. | Python 3.8+ (opcjonalnie) |
 
 ---
@@ -176,7 +176,7 @@ Ponieważ plik wykonywalny jest kompilowany za pomocą narzędzia Zig i zawiera 
 1. Gdy pojawi się niebieski ekran informujący *„System Windows chronił ten komputer”* (SmartScreen):
 2. Kliknij odnośnik tekstowy **„Więcej informacji”** (*More info*).
 3. Kliknij przycisk **„Uruchom mimo to”** (*Run anyway*).
-4. *(Alternatywnie)* Możesz uruchomić aplikację bezpośrednio w przeglądarce za pośrednictwem [GitHub Pages](https://dzuyonak.github.io/minecraft-password-trainer/) lub skompilować plik samodzielnie ze źródeł (`./build.sh`).
+4. *(Alternatywnie)* Możesz uruchomić aplikację bezpośrednio w przeglądarce za pośrednictwem [GitHub Pages](https://dzuyonak.github.io/password-trainer-minecraft/) lub skompilować plik samodzielnie ze źródeł (`./build.sh`).
 
 ---
 
@@ -294,7 +294,7 @@ zig c++ -target x86_64-windows-gnu \
    - W ustawieniach repozytorium otwórz **Settings** ➔ **Pages**.
    - W sekcji **Branch** wybierz gałąź `main` oraz folder `/(root)`.
    - Kliknij **Save**.
-   - Aplikacja będzie natychmiast dostępna pod adresem: `https://dzuyonak.github.io/minecraft-password-trainer/`.
+   - Aplikacja będzie natychmiast dostępna pod adresem: `https://dzuyonak.github.io/password-trainer-minecraft/`.
 
 ---
 
