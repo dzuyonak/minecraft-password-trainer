@@ -1,0 +1,22 @@
+# Mac system files
+.DS_Store
+
+# Large compiler toolchain binaries
+tools/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Build artifacts
+*.pdb
+*.obj
+*.o
+*.lib
+
+# Editor settings
+.vscode/
+.idea/

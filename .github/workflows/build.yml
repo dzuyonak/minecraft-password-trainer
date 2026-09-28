@@ -1,0 +1,43 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Zig
+        uses: mlugg/setup-zig@v1
+        with:
+          version: 0.13.0
+
+      - name: Generate embedded assets
+        run: python3 generate_assets.py
+
+      - name: Compile Windows EXE
+        run: |
+          zig c++ -target x86_64-windows-gnu \
+            -Wl,--subsystem,windows \
+            -O2 \
+            main.cpp \
+            -lgdiplus -lole32 -lwinmm -luser32 -lgdi32 -lcomctl32 -lshlwapi \
+            -o MinecraftPasswordTrainer.exe
+
+      - name: Upload EXE artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MinecraftPasswordTrainer
+          path: MinecraftPasswordTrainer.exe

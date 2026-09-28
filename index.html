@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тренажёр логина и пароля в стиле Minecraft</title>
+  <script src="config.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: #121316;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #ECEFF1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 660px;
+      background: #181a1f;
+      border: 3px solid #363a45;
+      border-radius: 8px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Top bar with language switcher & settings */
+    .top-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px 6px;
+      background: #1e2b20;
+    }
+
+    .lang-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-lang {
+      background: #23272f;
+      border: 2px solid #3c4250;
+      color: #b0bec5;
+      border-radius: 4px;
+      padding: 4px 9px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .btn-lang:hover {
+      background: #2e3542;
+      color: #ffffff;
+      border-color: #55FF55;
+    }
+
+    .btn-lang.active {
+      background: #295732;
+      border-color: #55FF55;
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(85, 255, 85, 0.4);
+    }
+
+    .btn-settings-gear {
+      background: #2a382d;
+      border: 1px solid #4a634f;
+      color: #bbf0c2;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-settings-gear:hover {
+      background: #39523d;
+      color: #ffffff;
+      border-color: #55FF55;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(180deg, #1e2b20 0%, #181a1f 100%);
+      padding: 12px 20px 16px;
+      text-align: center;
+      border-bottom: 2px solid #272a32;
+    }
+
+    .header.superprize {
+      background: linear-gradient(180deg, #3d2b12 0%, #181a1f 100%);
+    }
+
+    .title {
+      font-size: 38px;
+      font-weight: 900;
+      color: #55FF55;
+      text-shadow: 3px 3px 0 #143314;
+      letter-spacing: 2px;
+    }
+
+    .title.gold {
+      color: #FFD700;
+      text-shadow: 3px 3px 0 #4a3600;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      font-weight: 700;
+      color: #4dd0e1;
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle.gold {
+      color: #55FF55;
+    }
+
+    /* Content Area */
+    .content {
+      padding: 24px 40px 28px;
+    }
+
+    .card {
+      background: #1f2229;
+      border: 2px solid #363b47;
+      border-radius: 6px;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .card.superprize {
+      border: 3px solid #d4a017;
+      background: #23202e;
+    }
+
+    /* Form Fields */
+    .field-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ECEFF1;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      height: 52px;
+      background: #121316;
+      border: 2px solid #454b59;
+      border-radius: 4px;
+      color: #FFFFFF;
+      font-size: 20px;
+      font-weight: 500;
+      padding: 0 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus {
+      border-color: #55FF55;
+      background: #181a1f;
+    }
+
+    .btn-eye {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      bottom: 4px;
+      width: 48px;
+      background: #2a2e38;
+      border: 1px solid #454b59;
+      border-radius: 4px;
+      color: #ECEFF1;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .btn-eye:hover {
+      background: #393e4d;
+      color: #55FF55;
+    }
+
+    /* Status message */
+    .status-msg {
+      font-size: 15px;
+      color: #90A4AE;
+      min-height: 24px;
+      margin-bottom: 20px;
+    }
+
+    .status-msg.error {
+      color: #FF5555;
+      font-weight: bold;
+    }
+
+    /* Minecraft 3D Beveled Buttons */
+    .mc-btn {
+      width: 100%;
+      height: 64px;
+      background: #2e8b34;
+      border: none;
+      border-top: 3px solid #5adb64;
+      border-left: 3px solid #5adb64;
+      border-right: 3px solid #124116;
+      border-bottom: 3px solid #124116;
+      border-radius: 4px;
+      color: #FFFFFF;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      text-shadow: 2px 2px 0 #124116;
+      letter-spacing: 1px;
+      transition: all 0.1s;
+      outline: none;
+    }
+
+    .mc-btn:hover {
+      background: #38aa40;
+      border-top-color: #72ef7b;
+      border-left-color: #72ef7b;
+    }
+
+    .mc-btn:active {
+      background: #226e27;
+      border-top: 3px solid #124116;
+      border-left: 3px solid #124116;
+      border-right: 3px solid #5adb64;
+      border-bottom: 3px solid #5adb64;
+      transform: translateY(2px);
+    }
+
+    .mc-btn.gold {
+      background: #d4a017;
+      border-top: 3px solid #ffe664;
+      border-left: 3px solid #ffe664;
+      border-right: 3px solid #78550a;
+      border-bottom: 3px solid #78550a;
+      color: #2b1f02;
+      text-shadow: 1px 1px 0 #fff29e;
+    }
+
+    .mc-btn.gold:hover {
+      background: #e6b41e;
+    }
+
+    .mc-btn.gray {
+      background: #5c5f69;
+      border-top: 3px solid #a0a5af;
+      border-left: 3px solid #a0a5af;
+      border-right: 3px solid #232428;
+      border-bottom: 3px solid #232428;
+      color: #ECEFF1;
+      text-shadow: 1px 1px 0 #232428;
+    }
+
+    .mc-btn.gray:hover {
+      background: #737680;
+    }
+
+    /* Hint box */
+    .hint-box {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: #14161a;
+      border: 1px dashed #454b59;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #B0BEC5;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .btn-edit-creds {
+      background: transparent;
+      border: none;
+      color: #80cbc4;
+      font-size: 13px;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .btn-edit-creds:hover {
+      color: #55FF55;
+    }
+
+    /* Mob Reward Screen */
+    .mob-img {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+      margin: 0 auto 16px;
+      display: block;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.6));
+      animation: floatMob 2.5s ease-in-out infinite;
+    }
+
+    .mob-img.superprize {
+      width: 320px;
+      height: 200px;
+      animation: dragonPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes floatMob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes dragonPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(180, 50, 255, 0.4)); }
+      50% { transform: scale(1.03); filter: drop-shadow(0 0 24px rgba(255, 80, 255, 0.8)); }
+    }
+
+    .mob-name {
+      font-size: 28px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+
+    .mob-badge {
+      font-size: 16px;
+      font-weight: 700;
+      color: #64b5f6;
+      margin-bottom: 14px;
+    }
+
+    .mob-badge.gold {
+      color: #FFD700;
+    }
+
+    .mob-desc {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #CFD8DC;
+      margin-bottom: 16px;
+      padding: 0 10px;
+    }
+
+    .progress-tag {
+      font-size: 15px;
+      font-weight: bold;
+      color: #FFD700;
+      margin-top: 10px;
+    }
+
+    .button-row {
+      margin-top: 20px;
+    }
+
+    /* Modal dialog */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #1e222a;
+      border: 2px solid #55FF55;
+      border-radius: 8px;
+      padding: 24px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #55FF55;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .modal-label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      color: #ECEFF1;
+      margin-bottom: 6px;
+    }
+
+    .modal-input {
+      width: 100%;
+      height: 44px;
+      background: #121316;
+      border: 1px solid #454d5e;
+      color: #FFFFFF;
+      font-size: 16px;
+      padding: 0 12px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: #55FF55;
+    }
+
+    .modal-btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="top-toolbar">
+      <div class="lang-group">
+        <button type="button" class="btn-lang active" data-lang="ru" id="btnLangRU">🇷🇺 RU</button>
+        <button type="button" class="btn-lang" data-lang="en" id="btnLangEN">🇬🇧 EN</button>
+        <button type="button" class="btn-lang" data-lang="pl" id="btnLangPL">🇵🇱 PL</button>
+      </div>
+      <button type="button" class="btn-settings-gear" id="btnOpenSettings">⚙️ Настройки</button>
+    </div>
+
+    <div class="header" id="headerBox">
+      <div class="title" id="headerTitle">MINECRAFT</div>
+      <div class="subtitle" id="headerSubtitle">ТРЕНАЖЁР ЛОГИНА И ПАРОЛЯ</div>
+    </div>
+
+    <div class="content" id="contentArea">
+      <!-- Screen 1: Login -->
+      <div id="screenLogin">
+        <div class="card">
+          <div class="field-group">
+            <label class="field-label" for="inputLogin" id="lblLogin">👤 ЛОГИН ИГРОКА:</label>
+            <div class="input-wrapper">
+              <input type="text" id="inputLogin" placeholder="Введи свой логин" autocomplete="off" autofocus>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="inputPass" id="lblPass">🔑 ПАРОЛЬ:</label>
+            <div class="input-wrapper">
+              <input type="password" id="inputPass" placeholder="Введи свой пароль" autocomplete="off">
+              <button type="button" class="btn-eye" id="btnEye">👁</button>
+            </div>
+          </div>
+
+          <div class="status-msg" id="statusMsg">Введи свой логин и пароль и нажми «Войти»</div>
+
+          <button type="button" class="mc-btn" id="btnLogin">▶ ВОЙТИ В ИГРУ</button>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+          <span id="hintBoxTitle">💡 Подсказка для тренировки:</span><br>
+          <span id="hintBoxLoginLbl">Логин:</span> <strong id="hintLogin" style="color:#55FF55;">steve</strong> &nbsp;|&nbsp;
+          <span id="hintBoxPassLbl">Пароль:</span> <strong id="hintPass" style="color:#55FF55;">diamond</strong>
+        </div>
+
+        <div style="text-align: center;">
+          <button type="button" class="btn-edit-creds" id="btnQuickEdit">✏️ Задать другие логин и пароль</button>
+        </div>
+      </div>
+
+      <!-- Screen 2: Mob Reward -->
+      <div id="screenReward" style="display: none;">
+        <div class="card">
+          <img id="mobImg" class="mob-img" src="" alt="Mob">
+          <div class="mob-name" id="mobName"></div>
+          <div class="mob-badge" id="mobBadge"></div>
+          <div class="mob-desc" id="mobDesc"></div>
+          <div class="progress-tag" id="progressTag"></div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="mc-btn" id="btnTrainAgain">🔄 ТРЕНИРОВАТЬСЯ ЕЩЁ</button>
+        </div>
+      </div>
+
+      <!-- Screen 3: Superprize -->
+      <div id="screenSuperprize" style="display: none;">
+        <div class="card superprize">
+          <img class="mob-img superprize" src="assets/characters/superprize.png" alt="Ender Dragon">
+          <div class="mob-name" id="dragonTitle" style="color: #FF80FF;">🐉 ДРАКОН КРАЯ ПОБЕЖДЁН!</div>
+          <div class="mob-badge gold" id="dragonBadge">[ ЛЕГЕНДАРНЫЙ МАСТЕР MINECRAFT ]</div>
+          <div class="mob-desc" id="dragonDesc" style="color: #FFFFFF;">
+            УРА! ТЫ НАСТОЯЩИЙ ГЕРОЙ!<br><br>
+            Ты открыл всех 15 персонажей и безошибочно выучил свой логин и пароль!<br>
+            Твоя учётная запись в полной безопасности, а пальцы помнят каждую букву.
+          </div>
+          <div id="trophyText" style="font-size: 15px; font-weight: bold; color: #55FF55; margin-top: 10px;">
+            🥇 ТЕБЕ ВРУЧАЕТСЯ ЗОЛОТОЙ КУБОК ЗНАТОКА MINECRAFT! 🥇
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="mc-btn gold" id="btnResetAll">🏆 НАЧАТЬ ЗАНОВО (СБРОС)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal Dialog -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-title" id="modalTitle">⚙️ Настройки для родителя</div>
+
+      <label class="modal-label" for="cfgLangSelect" id="modalLblLang">Язык интерфейса:</label>
+      <select id="cfgLangSelect" class="modal-input" style="cursor: pointer;">
+        <option value="ru">Русский (RU) 🇷🇺</option>
+        <option value="en">English (EN) 🇬🇧</option>
+        <option value="pl">Polski (PL) 🇵🇱</option>
+      </select>
+
+      <label class="modal-label" for="cfgLoginInput" id="modalLblLogin">Правильный логин ребёнка:</label>
+      <input type="text" id="cfgLoginInput" class="modal-input" placeholder="Например: steve">
+
+      <label class="modal-label" for="cfgPassInput" id="modalLblPass">Правильный пароль ребёнка:</label>
+      <input type="text" id="cfgPassInput" class="modal-input" placeholder="Например: diamond">
+
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 13px; color: #B0BEC5; cursor: pointer;">
+          <input type="checkbox" id="cfgShowPass" style="vertical-align: middle; margin-right: 6px;">
+          <span id="modalChkPass">По умолчанию показывать пароль открытым текстом</span>
+        </label>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <label style="font-size: 13px; color: #B0BEC5; cursor: pointer;">
+          <input type="checkbox" id="cfgShowHint" style="vertical-align: middle; margin-right: 6px;">
+          <span id="modalChkHint">Показывать подсказку с логином и паролем внизу окна</span>
+        </label>
+      </div>
+
+      <div class="modal-btn-row">
+        <button type="button" class="mc-btn" id="btnSaveModal" style="height:48px; font-size:16px;">💾 СОХРАНИТЬ</button>
+        <button type="button" class="mc-btn gray" id="btnCloseModal" style="height:48px; font-size:16px; width:120px;">ОТМЕНА</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Audio Context Synthesizer (Fallback when file audio is blocked)
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudio() {
+      if (!audioCtx) audioCtx = new AudioCtx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playSoundSuccess() {
+      try {
+        const audio = new Audio("assets/sounds/success.wav");
+        audio.play().catch(() => playSynthSuccess());
+      } catch (e) {
+        playSynthSuccess();
+      }
+    }
+
+    function playSoundError() {
+      try {
+        const audio = new Audio("assets/sounds/error.wav");
+        audio.play().catch(() => playSynthError());
+      } catch (e) {
+        playSynthError();
+      }
+    }
+
+    function playSoundFanfare() {
+      try {
+        const audio = new Audio("assets/sounds/fanfare.wav");
+        audio.play().catch(() => playSynthFanfare());
+      } catch (e) {
+        playSynthFanfare();
+      }
+    }
+
+    function playSynthSuccess() {
+      const ctx = getAudio();
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.2, ctx.currentTime + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.12);
+        osc.stop(ctx.currentTime + i * 0.12 + 0.45);
+      });
+    }
+
+    function playSynthError() {
+      const ctx = getAudio();
+      [180, 140].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.2, ctx.currentTime + i * 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.15);
+        osc.stop(ctx.currentTime + i * 0.15 + 0.22);
+      });
+    }
+
+    function playSynthFanfare() {
+      const ctx = getAudio();
+      const notes = [
+        { f: 523.25, t: 0.0, d: 0.2 },
+        { f: 659.25, t: 0.2, d: 0.2 },
+        { f: 783.99, t: 0.4, d: 0.2 },
+        { f: 1046.5, t: 0.6, d: 0.6 },
+        { f: 659.25, t: 1.2, d: 0.8 },
+        { f: 783.99, t: 1.2, d: 0.8 },
+        { f: 1046.5, t: 1.2, d: 0.8 },
+        { f: 1318.5, t: 1.2, d: 0.8 },
+      ];
+      notes.forEach(({ f, t, d }) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = f;
+        gain.gain.setValueAtTime(0.25, ctx.currentTime + t);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + d);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + t);
+        osc.stop(ctx.currentTime + t + d);
+      });
+    }
+
+    // Localization Dictionary (RU, EN, PL)
+    const I18N = {
+      ru: {
+        app_title: "Тренажёр логина и пароля в стиле Minecraft",
+        header_title: "MINECRAFT",
+        header_sub_fmt: "ТРЕНАЖЁР ЛОГИНА И ПАРОЛЯ (ОТКРЫТО {count} ИЗ {total})",
+        lbl_login: "👤 ЛОГИН ИГРОКА:",
+        placeholder_login: "Введи свой логин",
+        lbl_pass: "🔑 ПАРОЛЬ:",
+        placeholder_pass: "Введи свой пароль",
+        btn_login: "▶ ВОЙТИ В ИГРУ",
+        status_default: "Введи свой логин и пароль и нажми «Войти»",
+        err_empty: "❌ Введи свой логин и пароль!",
+        err_both: "❌ Неверный логин и пароль! Попробуй ещё раз.",
+        err_login: "❌ Логин не совпадает! Проверь написание.",
+        err_pass: "❌ Неверный пароль! Проверь регистр букв.",
+        hint_title: "💡 Подсказка для тренировки:",
+        hint_login_lbl: "Логин:",
+        hint_pass_lbl: "Пароль:",
+        btn_quick_edit: "✏️ Задать другие логин и пароль",
+        btn_settings: "⚙️ Настройки",
+        win_title: "🎉 ПАРОЛЬ ВЕРНЫЙ!",
+        win_sub: "Отличная работа! Новый персонаж открыт!",
+        progress_fmt: "⭐ Открыто персонажей: {count} из {total} (Осталось: {left})",
+        btn_train_again: "🔄 ТРЕНИРОВАТЬСЯ ЕЩЁ",
+        super_title: "🏆 СУПЕР-ПРИЗ! 🏆",
+        super_sub: "🌟 ВСЯ КОЛЛЕКЦИЯ ИЗ 15 ПЕРСОНАЖЕЙ СОБРАНА! 🌟",
+        dragon_title: "🐉 ДРАКОН КРАЯ ПОБЕЖДЁН!",
+        dragon_badge: "[ ЛЕГЕНДАРНЫЙ МАСТЕР MINECRAFT ]",
+        dragon_desc: "УРА! ТЫ НАСТОЯЩИЙ ГЕРОЙ!<br><br>Ты открыл всех 15 персонажей и безошибочно выучил свой логин и пароль!<br>Твоя учётная запись в полной безопасности, а пальцы помнят каждую букву.",
+        trophy_text: "🥇 ТЕБЕ ВРУЧАЕТСЯ ЗОЛОТОЙ КУБОК ЗНАТОКА MINECRAFT! 🥇",
+        btn_reset_all: "🏆 НАЧАТЬ ЗАНОВО (СБРОС)",
+        modal_title: "⚙️ Настройки для родителя",
+        modal_lbl_login: "Правильный логин ребёнка:",
+        modal_lbl_pass: "Правильный пароль ребёнка:",
+        modal_lbl_lang: "Язык приложения:",
+        modal_chk_pass: "По умолчанию показывать пароль открытым текстом",
+        modal_chk_hint: "Показывать подсказку с логином и паролем внизу окна",
+        eye_hide: "Скрыть пароль (сделать точками)",
+        eye_show: "Показать пароль открытым текстом",
+        modal_btn_save: "💾 СОХРАНИТЬ",
+        modal_btn_cancel: "ОТМЕНА",
+        alert_fill_both: "Пожалуйста, заполните и логин, и пароль!"
+      },
+      en: {
+        app_title: "Login & Password Trainer in Minecraft Style",
+        header_title: "MINECRAFT",
+        header_sub_fmt: "LOGIN & PASSWORD TRAINER (UNLOCKED {count} OF {total})",
+        lbl_login: "👤 PLAYER LOGIN:",
+        placeholder_login: "Enter your login",
+        lbl_pass: "🔑 PASSWORD:",
+        placeholder_pass: "Enter your password",
+        btn_login: "▶ LOG IN TO GAME",
+        status_default: "Enter your login and password and click \"Log In\"",
+        err_empty: "❌ Enter your login and password!",
+        err_both: "❌ Incorrect login and password! Try again.",
+        err_login: "❌ Login does not match! Check each letter.",
+        err_pass: "❌ Incorrect password! Check letter casing.",
+        hint_title: "💡 Practice hint:",
+        hint_login_lbl: "Login:",
+        hint_pass_lbl: "Password:",
+        btn_quick_edit: "✏️ Change login and password",
+        btn_settings: "⚙️ Settings",
+        win_title: "🎉 PASSWORD IS CORRECT!",
+        win_sub: "Great job! New character unlocked!",
+        progress_fmt: "⭐ Characters unlocked: {count} of {total} ({left} left)",
+        btn_train_again: "🔄 TRAIN AGAIN",
+        super_title: "🏆 GRAND PRIZE! 🏆",
+        super_sub: "🌟 ALL 15 CHARACTERS UNLOCKED! 🌟",
+        dragon_title: "🐉 ENDER DRAGON DEFEATED!",
+        dragon_badge: "[ LEGENDARY MINECRAFT MASTER ]",
+        dragon_desc: "HOORAY! YOU ARE A TRUE HERO!<br><br>You unlocked all 15 characters and mastered your login and password!<br>Your account is completely secure, and your fingers remember every key.",
+        trophy_text: "🥇 YOU ARE AWARDED THE GOLDEN MINECRAFT TROPHY! 🥇",
+        btn_reset_all: "🏆 PLAY AGAIN (RESET)",
+        modal_title: "⚙️ Parent Settings",
+        modal_lbl_login: "Child's correct login:",
+        modal_lbl_pass: "Child's correct password:",
+        modal_lbl_lang: "Application language:",
+        modal_chk_pass: "Show password as plain text by default",
+        modal_chk_hint: "Show login and password hint at the bottom",
+        eye_hide: "Hide password",
+        eye_show: "Show password",
+        modal_btn_save: "💾 SAVE",
+        modal_btn_cancel: "CANCEL",
+        alert_fill_both: "Please enter both login and password!"
+      },
+      pl: {
+        app_title: "Trening loginu i hasła w stylu Minecraft",
+        header_title: "MINECRAFT",
+        header_sub_fmt: "TRENING LOGINU I HASŁA (ODBLOKOWANO {count} Z {total})",
+        lbl_login: "👤 LOGIN GRACZA:",
+        placeholder_login: "Wpisz swój login",
+        lbl_pass: "🔑 HASŁO:",
+        placeholder_pass: "Wpisz swoje hasło",
+        btn_login: "▶ ZALOGUJ DO GRY",
+        status_default: "Wpisz swój login i hasło oraz kliknij „Zaloguj”",
+        err_empty: "❌ Wpisz swój login i hasło!",
+        err_both: "❌ Nieprawidłowy login i hasło! Spróbuj ponownie.",
+        err_login: "❌ Login się nie zgadza! Sprawdź każdą literę.",
+        err_pass: "❌ Nieprawidłowe hasło! Sprawdź wielkość liter.",
+        hint_title: "💡 Podpowiedź do ćwiczeń:",
+        hint_login_lbl: "Login:",
+        hint_pass_lbl: "Hasło:",
+        btn_quick_edit: "✏️ Zmień login i hasło",
+        btn_settings: "⚙️ Ustawienia",
+        win_title: "🎉 HASŁO POPRAWNE!",
+        win_sub: "Świetna robota! Nowa postać odblokowana!",
+        progress_fmt: "⭐ Odblokowane postacie: {count} z {total} (Pozostało: {left})",
+        btn_train_again: "🔄 ĆWICZ DALEJ",
+        super_title: "🏆 SUPER NAGRODA! 🏆",
+        super_sub: "🌟 CAŁA KOLEKCJA 15 POSTACI ZEBRANA! 🌟",
+        dragon_title: "🐉 SMOK KRESU POKONANY!",
+        dragon_badge: "[ LEGENDARNY MISTRZ MINECRAFT ]",
+        dragon_desc: "HURA! JESTEŚ PRAWDZIWYM BOHATEREM!<br><br>Odblokowałeś wszystkie 15 postaci i bezbłędnie opanowałeś swój login i hasło!<br>Twoje konto jest w pełni bezpieczne, a palce pamiętają każdy klawisz.",
+        trophy_text: "🥇 OTRZYMUJESZ ZŁOTY PUCHAR ZNAWCY MINECRAFTA! 🥇",
+        btn_reset_all: "🏆 ZACZNIJ OD NOWA (RESET)",
+        modal_title: "⚙️ Ustawienia dla rodzica",
+        modal_lbl_login: "Prawidłowy login dziecka:",
+        modal_lbl_pass: "Prawidłowe hasło dziecka:",
+        modal_lbl_lang: "Język aplikacji:",
+        modal_chk_pass: "Domyślnie pokazuj hasło jako jawny tekst",
+        modal_chk_hint: "Pokazuj podpowiedź z loginem i hasłem na dole okna",
+        eye_hide: "Ukryj hasło",
+        eye_show: "Pokaż hasło",
+        modal_btn_save: "💾 ZAPISZ",
+        modal_btn_cancel: "ANULUJ",
+        alert_fill_both: "Proszę podać zarówno login, jak i hasło!"
+      }
+    };
+
+    // Mob Database with Multilingual descriptions (RU, EN, PL)
+    const MOBS = [
+      {
+        id: 'steve',
+        name_ru: 'Стив', name_en: 'Steve', name_pl: 'Steve',
+        type_ru: 'Главный герой', type_en: 'Main Hero', type_pl: 'Główny bohater',
+        desc_ru: 'Легендарный исследователь и строитель мира Minecraft! Готов к любым приключениям.',
+        desc_en: 'Legendary explorer and builder of the Minecraft world! Ready for any adventure.',
+        desc_pl: 'Legendarny odkrywca i budowniczy świata Minecraft! Gotowy na każdą przygodę.'
+      },
+      {
+        id: 'alex',
+        name_ru: 'Алекс', name_en: 'Alex', name_pl: 'Alex',
+        type_ru: 'Главная героиня', type_en: 'Main Heroine', type_pl: 'Główna bohaterka',
+        desc_ru: 'Отважная путешественница с луком и киркой. Мастер выживания в диких биомах!',
+        desc_en: 'Brave adventurer with a bow and pickaxe. Survival master in wild biomes!',
+        desc_pl: 'Odważna podróżniczka z łukiem i kilofem. Mistrzyni przetrwania w dzikich biomach!'
+      },
+      {
+        id: 'creeper',
+        name_ru: 'Крипер', name_en: 'Creeper', name_pl: 'Creeper',
+        type_ru: 'Опасный моб', type_en: 'Dangerous Mob', type_pl: 'Groźny potwór',
+        desc_ru: 'Ш-ш-ш... Бум! Самый знаменитый моб Minecraft. Но он очень боится котиков!',
+        desc_en: 'Sss... Boom! The most iconic Minecraft mob. But it is utterly terrified of cats!',
+        desc_pl: 'Sss... BUM! Najsłynniejszy potwór w Minecrafcie. Bardzo boi się kotów!'
+      },
+      {
+        id: 'enderman',
+        name_ru: 'Эндермен', name_en: 'Enderman', name_pl: 'Enderman',
+        type_ru: 'Странник Края', type_en: 'End Wanderer', type_pl: 'Wędrowiec Kresu',
+        desc_ru: 'Высокий житель Края. Умеет мгновенно телепортироваться и любит переставлять блоки!',
+        desc_en: 'Tall dweller of the End. Teleports instantly and loves picking up and moving blocks!',
+        desc_pl: 'Wysoki mieszkaniec Kresu. Potrafi błyskawicznie się teleportować i przestawiać bloki!'
+      },
+      {
+        id: 'zombie',
+        name_ru: 'Зомби', name_en: 'Zombie', name_pl: 'Zombie',
+        type_ru: 'Ночной монстр', type_en: 'Night Monster', type_pl: 'Nocny potwór',
+        desc_ru: 'Опасен в темноте и пещерах, но на ярком утреннем солнце сразу загорается!',
+        desc_en: 'Dangerous in dark caves and at night, but burns immediately in the morning sun!',
+        desc_pl: 'Niebezpieczny w ciemnościach i jaskiniach, lecz w porannym słońcu od razu płonie!'
+      },
+      {
+        id: 'skeleton',
+        name_ru: 'Скелет', name_en: 'Skeleton', name_pl: 'Szkielet',
+        type_ru: 'Меткий лучник', type_en: 'Deadeye Archer', type_pl: 'Celny łucznik',
+        desc_ru: 'Опасный стрелок с костяным луком. Днём прячется под кронами деревьев или в воде.',
+        desc_en: 'Skilled archer with a bone bow. Hides under tree shadows or in water by day.',
+        desc_pl: 'Wprawny strzelec z łukiem. Za dnia ukrywa się w cieniu drzew lub w wodzie.'
+      },
+      {
+        id: 'iron_golem',
+        name_ru: 'Железный Голем', name_en: 'Iron Golem', name_pl: 'Żelazny Golem',
+        type_ru: 'Защитник деревни', type_en: 'Village Protector', type_pl: 'Obrońca wioski',
+        desc_ru: 'Могучий гигант из железных блоков. Храбро защищает жителей и дарит им алые маки!',
+        desc_en: 'Mighty giant forged from iron blocks. Bravely defends villagers and offers red poppies!',
+        desc_pl: 'Potężny olbrzym z żelaznych bloków. Dzielnie broni osadników i wręcza im czerwone maki!'
+      },
+      {
+        id: 'wolf',
+        name_ru: 'Прирученный Волк', name_en: 'Tamed Wolf', name_pl: 'Oswojony Wilk',
+        type_ru: 'Верный питомец', type_en: 'Loyal Companion', type_pl: 'Wierny towarzysz',
+        desc_ru: 'Самый преданный друг! Угости его косточкой, и он будет защищать тебя от любых врагов.',
+        desc_en: 'Your most loyal companion! Feed him a bone and he will bravely protect you from any danger.',
+        desc_pl: 'Najwierniejszy przyjaciel! Daj mu kość, a będzie dzielnie bronić cię przed każdym wrogiem.'
+      },
+      {
+        id: 'pig',
+        name_ru: 'Свинка', name_en: 'Pig', name_pl: 'Świnka',
+        type_ru: 'Мирное животное', type_en: 'Passive Animal', type_pl: 'Łagodne zwierzę',
+        desc_ru: 'Очаровательная хрюшка! Если надеть на неё седло и взять удочку с морковью — можно кататься верхом!',
+        desc_en: 'Adorable little piggy! Put a saddle on and hold a carrot on a stick for a fun ride!',
+        desc_pl: 'Urocza świnka! Załóż na nią siodło i weź wędkę z marchewką, a wyruszysz na przejażdżkę!'
+      },
+      {
+        id: 'cow',
+        name_ru: 'Корова', name_en: 'Cow', name_pl: 'Krowa',
+        type_ru: 'Мирное животное', type_en: 'Passive Animal', type_pl: 'Łagodne zwierzę',
+        desc_ru: 'Даёт питательное молочко в ведре, которое мгновенно снимает любые негативные эффекты зелий!',
+        desc_en: 'Provides nutritious milk in a bucket that cures any negative potion effects instantly!',
+        desc_pl: 'Daje pożywne mleko w wiaderku, które natychmiast usuwa wszelkie negatywne efekty mikstur!'
+      },
+      {
+        id: 'sheep',
+        name_ru: 'Овечка', name_en: 'Sheep', name_pl: 'Owca',
+        type_ru: 'Мирное животное', type_en: 'Passive Animal', type_pl: 'Łagodne zwierzę',
+        desc_ru: 'Пушистая овечка. Из её шерсти можно сделать тёплую кровать, чтобы переждать ночь!',
+        desc_en: 'Fluffy sheep! Use its soft wool to craft a cozy bed to safely sleep through the night.',
+        desc_pl: 'Puszysta owieczka! Z jej wełny stworzysz przytulne łóżko, by bezpiecznie przespać noc.'
+      },
+      {
+        id: 'warden',
+        name_ru: 'Варден (Хранитель)', name_en: 'Warden', name_pl: 'Strażnik (Warden)',
+        type_ru: 'Древний страж', type_en: 'Ancient Guardian', type_pl: 'Starożytny strażnik',
+        desc_ru: 'Грозный слепой страж Древнего города! Он не видит, но чувствует каждый шаг и шорох по вибрациям.',
+        desc_en: 'Fearsome blind guardian of the Deep Dark! Senses every footstep and whisper through vibrations.',
+        desc_pl: 'Groźny, ślepy strażnik Starożytnego Miasta! Wyczuwa każdy krok i szelest poprzez wibracje.'
+      },
+      {
+        id: 'bee',
+        name_ru: 'Пчёлка', name_en: 'Bee', name_pl: 'Pszczoła',
+        type_ru: 'Трудолюбивый моб', type_en: 'Busy Helper', type_pl: 'Pracowity mob',
+        desc_ru: 'Милая жужжащая пчела! Опыляет грядки, собирает нектар и наполняет ульи сладким мёдом.',
+        desc_en: 'Cute buzzing bee! Pollinates crops, collects sweet flower nectar, and fills beehives with honey.',
+        desc_pl: 'Urocza bzykająca pszczółka! Zapyla uprawy, zbiera nektar i napełnia ule pysznym miodem.'
+      },
+      {
+        id: 'axolotl',
+        name_ru: 'Аксолотль', name_en: 'Axolotl', name_pl: 'Aksolotl',
+        type_ru: 'Водный друг', type_en: 'Aquatic Friend', type_pl: 'Podwodny przyjaciel',
+        desc_ru: 'Прелестный житель пышных пещер. Помогает в подводных сражениях и умеет притворяться мёртвым!',
+        desc_en: 'Adorable resident of lush caves. Assists in underwater battles and plays dead to regenerate!',
+        desc_pl: 'Uroczy mieszkaniec bujnych jaskiń. Pomaga w walce pod wodą i potrafi udawać martwego!'
+      },
+      {
+        id: 'fox',
+        name_ru: 'Лисичка', name_en: 'Fox', name_pl: 'Lis',
+        type_ru: 'Ловкий зверёк', type_en: 'Agile Creature', type_pl: 'Zwinny zwierzak',
+        desc_ru: 'Обожает сладкие ягоды, высоко прыгает за добычей и уютно спит в снегу, свернувшись клубочком.',
+        desc_en: 'Loves sweet sweetberries, pounces high to catch prey, and curls up cozily to sleep in the snow.',
+        desc_pl: 'Uwielbia słodkie jagody, skacze wysoko po zdobycz i śpi przytulnie w śniegu zwinięty w kłębek.'
+      }
+    ];
+
+    // Language state initialization
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+    const cfgFromJs = window.MINECRAFT_CONFIG || {};
+
+    let currentLang = 'ru';
+    if (['ru', 'en', 'pl'].includes(langParam)) {
+      currentLang = langParam;
+    } else if (localStorage.getItem('mc_trainer_lang')) {
+      currentLang = localStorage.getItem('mc_trainer_lang');
+    } else if (cfgFromJs.language && ['ru', 'en', 'pl'].includes(cfgFromJs.language)) {
+      currentLang = cfgFromJs.language;
+    }
+
+    let targetLogin = cfgFromJs.login || 'steve';
+    let targetPass = cfgFromJs.password || 'diamond';
+    let showHint = (cfgFromJs.show_hint !== 0);
+    let defaultShowPassword = (cfgFromJs.show_password !== 0);
+    let isPassVisible = defaultShowPassword;
+
+    let unlocked = JSON.parse(localStorage.getItem('mc_trainer_unlocked') || '[]');
+    let currentMobIdx = -1;
+    let currentStatusErrorKey = null;
+
+    // DOM Elements
+    const btnLangRU = document.getElementById('btnLangRU');
+    const btnLangEN = document.getElementById('btnLangEN');
+    const btnLangPL = document.getElementById('btnLangPL');
+
+    const inputLogin = document.getElementById('inputLogin');
+    const inputPass = document.getElementById('inputPass');
+    const btnEye = document.getElementById('btnEye');
+    const btnLogin = document.getElementById('btnLogin');
+    const statusMsg = document.getElementById('statusMsg');
+    const hintBox = document.getElementById('hintBox');
+    const hintBoxTitle = document.getElementById('hintBoxTitle');
+    const hintBoxLoginLbl = document.getElementById('hintBoxLoginLbl');
+    const hintBoxPassLbl = document.getElementById('hintBoxPassLbl');
+    const hintLogin = document.getElementById('hintLogin');
+    const hintPass = document.getElementById('hintPass');
+    const btnQuickEdit = document.getElementById('btnQuickEdit');
+    const btnOpenSettings = document.getElementById('btnOpenSettings');
+
+    const headerBox = document.getElementById('headerBox');
+    const headerTitle = document.getElementById('headerTitle');
+    const headerSubtitle = document.getElementById('headerSubtitle');
+
+    const screenLogin = document.getElementById('screenLogin');
+    const screenReward = document.getElementById('screenReward');
+    const screenSuperprize = document.getElementById('screenSuperprize');
+
+    const mobImg = document.getElementById('mobImg');
+    const mobName = document.getElementById('mobName');
+    const mobBadge = document.getElementById('mobBadge');
+    const mobDesc = document.getElementById('mobDesc');
+    const progressTag = document.getElementById('progressTag');
+    const btnTrainAgain = document.getElementById('btnTrainAgain');
+
+    const dragonTitle = document.getElementById('dragonTitle');
+    const dragonBadge = document.getElementById('dragonBadge');
+    const dragonDesc = document.getElementById('dragonDesc');
+    const trophyText = document.getElementById('trophyText');
+    const btnResetAll = document.getElementById('btnResetAll');
+
+    // Settings Modal elements
+    const settingsModal = document.getElementById('settingsModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalLblLang = document.getElementById('modalLblLang');
+    const modalLblLogin = document.getElementById('modalLblLogin');
+    const modalLblPass = document.getElementById('modalLblPass');
+    const modalChkPass = document.getElementById('modalChkPass');
+    const modalChkHint = document.getElementById('modalChkHint');
+    const cfgLangSelect = document.getElementById('cfgLangSelect');
+    const cfgLoginInput = document.getElementById('cfgLoginInput');
+    const cfgPassInput = document.getElementById('cfgPassInput');
+    const cfgShowPass = document.getElementById('cfgShowPass');
+    const cfgShowHint = document.getElementById('cfgShowHint');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const btnSaveModal = document.getElementById('btnSaveModal');
+
+    function applyLanguage(lang) {
+      if (!I18N[lang]) lang = 'ru';
+      currentLang = lang;
+      localStorage.setItem('mc_trainer_lang', lang);
+
+      document.documentElement.lang = lang;
+      document.title = I18N[lang].app_title;
+
+      // Update active pills
+      btnLangRU.classList.toggle('active', lang === 'ru');
+      btnLangEN.classList.toggle('active', lang === 'en');
+      btnLangPL.classList.toggle('active', lang === 'pl');
+      cfgLangSelect.value = lang;
+
+      // Update Form Labels & Placeholders
+      document.getElementById('lblLogin').textContent = I18N[lang].lbl_login;
+      inputLogin.placeholder = I18N[lang].placeholder_login;
+      document.getElementById('lblPass').textContent = I18N[lang].lbl_pass;
+      inputPass.placeholder = I18N[lang].placeholder_pass;
+      btnLogin.textContent = I18N[lang].btn_login;
+      btnQuickEdit.textContent = I18N[lang].btn_quick_edit;
+      btnOpenSettings.textContent = I18N[lang].btn_settings;
+      btnTrainAgain.textContent = I18N[lang].btn_train_again;
+      btnResetAll.textContent = I18N[lang].btn_reset_all;
+
+      // Modal elements
+      modalTitle.textContent = I18N[lang].modal_title;
+      modalLblLang.textContent = I18N[lang].modal_lbl_lang;
+      modalLblLogin.textContent = I18N[lang].modal_lbl_login;
+      modalLblPass.textContent = I18N[lang].modal_lbl_pass;
+      modalChkPass.textContent = I18N[lang].modal_chk_pass;
+      modalChkHint.textContent = I18N[lang].modal_chk_hint;
+      btnSaveModal.textContent = I18N[lang].modal_btn_save;
+      btnCloseModal.textContent = I18N[lang].modal_btn_cancel;
+
+      // Update eye button tooltip
+      btnEye.title = isPassVisible ? I18N[lang].eye_hide : I18N[lang].eye_show;
+
+      // Hint box
+      hintBoxTitle.textContent = I18N[lang].hint_title;
+      hintBoxLoginLbl.textContent = I18N[lang].hint_login_lbl;
+      hintBoxPassLbl.textContent = I18N[lang].hint_pass_lbl;
+
+      // Superprize elements
+      dragonTitle.textContent = I18N[lang].dragon_title;
+      dragonBadge.textContent = I18N[lang].dragon_badge;
+      dragonDesc.innerHTML = I18N[lang].dragon_desc;
+      trophyText.textContent = I18N[lang].trophy_text;
+
+      // Status message
+      if (currentStatusErrorKey && I18N[lang][currentStatusErrorKey]) {
+        statusMsg.textContent = I18N[lang][currentStatusErrorKey];
+      } else if (!currentStatusErrorKey) {
+        statusMsg.textContent = I18N[lang].status_default;
+      }
+
+      // Update current screen headers
+      if (screenSuperprize.style.display === 'block') {
+        headerTitle.textContent = I18N[lang].super_title;
+        headerSubtitle.textContent = I18N[lang].super_sub;
+      } else if (screenReward.style.display === 'block') {
+        headerTitle.textContent = I18N[lang].win_title;
+        headerSubtitle.textContent = I18N[lang].win_sub;
+        if (currentMobIdx >= 0) {
+          renderMobDetails(currentMobIdx);
+        }
+      } else {
+        headerTitle.textContent = I18N[lang].header_title;
+        headerSubtitle.textContent = I18N[lang].header_sub_fmt
+          .replace('{count}', unlocked.length)
+          .replace('{total}', MOBS.length);
+      }
+    }
+
+    function renderMobDetails(mobIdx) {
+      const mob = MOBS[mobIdx];
+      const lang = currentLang;
+
+      let nameText = '';
+      if (lang === 'en') {
+        nameText = mob.name_en;
+      } else if (lang === 'pl') {
+        nameText = `${mob.name_pl} (${mob.name_en})`;
+      } else {
+        nameText = `${mob.name_ru} (${mob.name_en})`;
+      }
+
+      const typeText = mob[`type_${lang}`] || mob.type_ru;
+      const descText = mob[`desc_${lang}`] || mob.desc_ru;
+
+      mobName.textContent = nameText;
+      mobBadge.textContent = `[ ${typeText} ]`;
+      mobDesc.textContent = descText;
+
+      const left = MOBS.length - unlocked.length;
+      progressTag.textContent = I18N[lang].progress_fmt
+        .replace('{count}', unlocked.length)
+        .replace('{total}', MOBS.length)
+        .replace('{left}', left);
+    }
+
+    function updateHints() {
+      hintLogin.textContent = targetLogin;
+      hintPass.textContent = targetPass;
+      hintBox.style.display = showHint ? 'block' : 'none';
+      if (screenLogin.style.display !== 'none') {
+        headerSubtitle.textContent = I18N[currentLang].header_sub_fmt
+          .replace('{count}', unlocked.length)
+          .replace('{total}', MOBS.length);
+      }
+    }
+
+    function applyPasswordVisibility() {
+      inputPass.type = isPassVisible ? 'text' : 'password';
+      btnEye.textContent = isPassVisible ? '🔒' : '👁';
+      btnEye.title = isPassVisible ? I18N[currentLang].eye_hide : I18N[currentLang].eye_show;
+    }
+
+    // Try live sync with Python server config.ini
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(data => {
+        if (data.login && data.password) {
+          targetLogin = data.login;
+          targetPass = data.password;
+          showHint = (data.show_hint !== 0);
+          if (data.show_password !== undefined) {
+            defaultShowPassword = (data.show_password !== 0);
+            isPassVisible = defaultShowPassword;
+            applyPasswordVisibility();
+          }
+          if (data.language && ['ru', 'en', 'pl'].includes(data.language)) {
+            currentLang = data.language;
+          }
+          applyLanguage(currentLang);
+          updateHints();
+        }
+      })
+      .catch(() => {
+        // Fallback to localStorage
+        const savedL = localStorage.getItem('mc_trainer_login');
+        const savedP = localStorage.getItem('mc_trainer_pass');
+        const savedH = localStorage.getItem('mc_trainer_show_hint');
+        const savedSP = localStorage.getItem('mc_trainer_show_password');
+        if (savedL) targetLogin = savedL;
+        if (savedP) targetPass = savedP;
+        if (savedH !== null) showHint = (savedH === '1');
+        if (savedSP !== null) {
+          defaultShowPassword = (savedSP === '1');
+          isPassVisible = defaultShowPassword;
+          applyPasswordVisibility();
+        }
+        applyLanguage(currentLang);
+        updateHints();
+      });
+
+    // Language button listeners
+    btnLangRU.addEventListener('click', () => { applyLanguage('ru'); syncConfigLanguage('ru'); });
+    btnLangEN.addEventListener('click', () => { applyLanguage('en'); syncConfigLanguage('en'); });
+    btnLangPL.addEventListener('click', () => { applyLanguage('pl'); syncConfigLanguage('pl'); });
+
+    function syncConfigLanguage(lang) {
+      fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login: targetLogin, password: targetPass, show_hint: showHint ? 1 : 0, language: lang })
+      }).catch(() => {});
+    }
+
+    // Toggle password eye
+    btnEye.addEventListener('click', () => {
+      isPassVisible = !isPassVisible;
+      applyPasswordVisibility();
+    });
+
+    // Enter key navigation
+    inputLogin.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') inputPass.focus();
+    });
+    inputPass.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkCredentials();
+    });
+    btnLogin.addEventListener('click', checkCredentials);
+
+    function checkCredentials() {
+      const u = inputLogin.value.trim();
+      const p = inputPass.value.trim();
+
+      const loginOk = (u.toLowerCase() === targetLogin.toLowerCase());
+      const passOk = (p === targetPass);
+
+      if (loginOk && passOk) {
+        currentStatusErrorKey = null;
+        statusMsg.className = 'status-msg';
+        statusMsg.textContent = '';
+
+        const locked = [];
+        for (let i = 0; i < MOBS.length; i++) {
+          if (!unlocked.includes(i)) locked.push(i);
+        }
+
+        if (locked.length > 0) {
+          const pick = locked[Math.floor(Math.random() * locked.length)];
+          unlocked.push(pick);
+          localStorage.setItem('mc_trainer_unlocked', JSON.stringify(unlocked));
+
+          if (unlocked.length === MOBS.length) {
+            playSoundFanfare();
+            showSuperprize();
+          } else {
+            playSoundSuccess();
+            showReward(pick);
+          }
+        } else {
+          playSoundFanfare();
+          showSuperprize();
+        }
+      } else {
+        playSoundError();
+        statusMsg.className = 'status-msg error';
+        if (!u && !p) {
+          currentStatusErrorKey = 'err_empty';
+          statusMsg.textContent = I18N[currentLang].err_empty;
+          inputLogin.focus();
+        } else if (!loginOk && !passOk) {
+          currentStatusErrorKey = 'err_both';
+          statusMsg.textContent = I18N[currentLang].err_both;
+          inputPass.select();
+        } else if (!loginOk) {
+          currentStatusErrorKey = 'err_login';
+          statusMsg.textContent = I18N[currentLang].err_login;
+          inputLogin.select();
+        } else {
+          currentStatusErrorKey = 'err_pass';
+          statusMsg.textContent = I18N[currentLang].err_pass;
+          inputPass.select();
+        }
+      }
+    }
+
+    function showReward(mobIdx) {
+      currentMobIdx = mobIdx;
+      const mob = MOBS[mobIdx];
+      headerBox.className = 'header';
+      headerTitle.className = 'title gold';
+      headerTitle.textContent = I18N[currentLang].win_title;
+      headerSubtitle.className = 'subtitle gold';
+      headerSubtitle.textContent = I18N[currentLang].win_sub;
+
+      mobImg.src = `assets/characters/${mob.id}.png`;
+      renderMobDetails(mobIdx);
+
+      screenLogin.style.display = 'none';
+      screenSuperprize.style.display = 'none';
+      screenReward.style.display = 'block';
+    }
+
+    function showSuperprize() {
+      headerBox.className = 'header superprize';
+      headerTitle.className = 'title gold';
+      headerTitle.textContent = I18N[currentLang].super_title;
+      headerSubtitle.className = 'subtitle gold';
+      headerSubtitle.textContent = I18N[currentLang].super_sub;
+
+      screenLogin.style.display = 'none';
+      screenReward.style.display = 'none';
+      screenSuperprize.style.display = 'block';
+    }
+
+    function showLoginScreen() {
+      currentStatusErrorKey = null;
+      headerBox.className = 'header';
+      headerTitle.className = 'title';
+      headerTitle.textContent = I18N[currentLang].header_title;
+      headerSubtitle.className = 'subtitle';
+      updateHints();
+
+      isPassVisible = defaultShowPassword;
+      applyPasswordVisibility();
+
+      inputLogin.value = '';
+      inputPass.value = '';
+      statusMsg.className = 'status-msg';
+      statusMsg.textContent = I18N[currentLang].status_default;
+
+      screenReward.style.display = 'none';
+      screenSuperprize.style.display = 'none';
+      screenLogin.style.display = 'block';
+      inputLogin.focus();
+    }
+
+    btnTrainAgain.addEventListener('click', showLoginScreen);
+    btnResetAll.addEventListener('click', () => {
+      unlocked = [];
+      localStorage.removeItem('mc_trainer_unlocked');
+      showLoginScreen();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === ' ') {
+        if (screenReward.style.display === 'block') {
+          showLoginScreen();
+        } else if (screenSuperprize.style.display === 'block') {
+          unlocked = [];
+          localStorage.removeItem('mc_trainer_unlocked');
+          showLoginScreen();
+        }
+      }
+    });
+
+    // Settings Modal Handlers
+    function openModal() {
+      cfgLangSelect.value = currentLang;
+      cfgLoginInput.value = targetLogin;
+      cfgPassInput.value = targetPass;
+      cfgShowPass.checked = defaultShowPassword;
+      cfgShowHint.checked = showHint;
+      settingsModal.classList.add('open');
+      cfgLoginInput.focus();
+    }
+
+    function closeModal() {
+      settingsModal.classList.remove('open');
+      inputLogin.focus();
+    }
+
+    btnOpenSettings.addEventListener('click', openModal);
+    btnQuickEdit.addEventListener('click', openModal);
+    btnCloseModal.addEventListener('click', closeModal);
+
+    btnSaveModal.addEventListener('click', () => {
+      const newL = cfgLoginInput.value.trim();
+      const newP = cfgPassInput.value.trim();
+      const newLang = cfgLangSelect.value;
+      if (!newL || !newP) {
+        alert(I18N[currentLang].alert_fill_both);
+        return;
+      }
+      targetLogin = newL;
+      targetPass = newP;
+      defaultShowPassword = cfgShowPass.checked;
+      isPassVisible = defaultShowPassword;
+      applyPasswordVisibility();
+      showHint = cfgShowHint.checked;
+
+      if (['ru', 'en', 'pl'].includes(newLang)) {
+        applyLanguage(newLang);
+      }
+
+      // Save to server config.ini if running via python3 app.py
+      fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          login: targetLogin,
+          password: targetPass,
+          show_hint: showHint ? 1 : 0,
+          show_password: defaultShowPassword ? 1 : 0,
+          language: currentLang
+        })
+      }).catch(() => {});
+
+      localStorage.setItem('mc_trainer_login', targetLogin);
+      localStorage.setItem('mc_trainer_pass', targetPass);
+      localStorage.setItem('mc_trainer_show_hint', showHint ? '1' : '0');
+      localStorage.setItem('mc_trainer_show_password', defaultShowPassword ? '1' : '0');
+      localStorage.setItem('mc_trainer_lang', currentLang);
+
+      updateHints();
+      closeModal();
+    });
+
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target === settingsModal) closeModal();
+    });
+
+    // Initial setup
+    applyPasswordVisibility();
+    applyLanguage(currentLang);
+    updateHints();
+  </script>
+</body>
+</html>
